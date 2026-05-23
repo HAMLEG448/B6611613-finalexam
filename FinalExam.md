@@ -50,45 +50,45 @@
 CI/CD pipeline ของระบบนี้ควรมี stage อะไรบ้างเรียงตามลำดับ (ตั้งแต่ developer push code จนถึง deploy)? อธิบายว่า **แต่ละ stage ทำอะไร** และ **ทำไมต้องเรียงลำดับนี้**
 
 >**ตอบ:**
-
-1. **Developer push code หรือ Pull Request**  
-   จุดเริ่มต้นคือ dev แก้ code แล้ว push ขึ้น Git เพื่อให้ระบบ CI/CD เริ่มทำงานอัตโนมัติ
-
-2. **Jenkins รับ webhook จาก Git**  
-   เมื่อมีการ push หรือ merge Git จะส่งสัญญาณไปหา Jenkins เพื่อให้เริ่ม pipeline ทันที ไม่ต้องให้คนกดเอง
-
-3. **Checkout source code**  
-   Jenkins ดึง code version ล่าสุดจาก Git มาใช้ build เพื่อให้มั่นใจว่าใช้ code ตัวเดียวกับที่ dev push จริง
-
-4. **Lint / Format / Static check**  
-   ตรวจ style และ syntax ของ Python Flask ก่อน เช่น import ผิด ตัวแปรผิด หรือ code ที่เสี่ยงพังง่าย ต้องทำก่อน test เพราะ code ยังเขียนผิดพื้นฐานก็ไม่ควรเสียเวลา build ต่อ
-
-5. **Run unit test / integration test**  
-   ทดสอบ logic ของระบบ เช่น API, database connection และ function สำคัญ เพื่อเช็กว่าแก้ code แล้วไม่ทำให้ของเดิมพัง
-
-6. **Build Docker image**  
-   ถ้า test ผ่าน Jenkins จะ build application เป็น Docker image เพื่อให้รันเหมือนกันทุก environment ไม่ว่าจะ dev, staging หรือ production
-
-7. **Push Docker image ไปที่ registry**  
-   เอา image ที่ build แล้วไปเก็บใน Docker Registry เช่น Docker Hub หรือ private registry เพื่อให้ Kubernetes ดึงไปใช้งานได้
-
-8. **Deploy ไป staging บน Kubernetes**  
-   Deploy ไป environment ทดสอบก่อน production เพื่อดูว่าระบบทำงานจริงบน Kubernetes ได้ไหม
-
-9. **Smoke test หลัง deploy**  
-   ทดสอบแบบเร็ว ๆ เช่น health check, login API, connect MySQL ได้ไหม เพื่อเช็กว่า container ไม่ได้แค่ start ได้ แต่ระบบใช้งานได้จริง
-
-10. **Manual approval ก่อน production**  
-    ให้คนในทีม เช่น dev หรือ ops ตรวจและยืนยันก่อน deploy จริง เพื่อลดโอกาสที่ code ผิดจะหลุดขึ้น production
-
-11. **Deploy ไป production**  
-    Jenkins สั่ง Kubernetes update deployment เช่นเปลี่ยน image version ใหม่ ระบบจะค่อย ๆ rollout โดยไม่ต้อง SSH เข้าเครื่องเอง
-
-12. **Monitoring ด้วย Prometheus + Grafana**  
-    หลัง deploy ต้องดู metric เช่น CPU, memory, error rate และ response time ถ้ามีปัญหาจะได้รู้เร็วและ rollback ได้
-
-**เหตุผลที่ต้องเรียงลำดับแบบนี้:**  
-เพราะต้องตรวจ code ก่อน build, ต้อง build ก่อน deploy และต้องทดสอบบน staging ก่อนขึ้น production เพื่อให้ลดความเสี่ยงกับระบบจริง
+>
+>1. **Developer push code หรือ Pull Request**  
+>   จุดเริ่มต้นคือ dev แก้ code แล้ว push ขึ้น Git เพื่อให้ระบบ CI/CD เริ่มทำงานอัตโนมัติ
+>
+>2. **Jenkins รับ webhook จาก Git**  
+>   เมื่อมีการ push หรือ merge Git จะส่งสัญญาณไปหา Jenkins เพื่อให้เริ่ม pipeline ทันที ไม่ต้องให้คนกดเอง
+>
+>3. **Checkout source code**  
+>   Jenkins ดึง code version ล่าสุดจาก Git มาใช้ build เพื่อให้มั่นใจว่าใช้ code ตัวเดียวกับที่ dev push จริง
+>
+>4. **Lint / Format / Static check**  
+>   ตรวจ style และ syntax ของ Python Flask ก่อน เช่น import ผิด ตัวแปรผิด หรือ code ที่เสี่ยงพังง่าย ต้องทำก่อน test เพราะ code ยังเขียนผิดพื้นฐานก็ไม่ควรเสียเวลา build ต่อ
+>
+>5. **Run unit test / integration test**  
+>   ทดสอบ logic ของระบบ เช่น API, database connection และ function สำคัญ เพื่อเช็กว่าแก้ code แล้วไม่ทำให้ของเดิมพัง
+>
+>6. **Build Docker image**  
+>   ถ้า test ผ่าน Jenkins จะ build application เป็น Docker image เพื่อให้รันเหมือนกันทุก environment ไม่ว่าจะ dev, staging หรือ production
+>
+>7. **Push Docker image ไปที่ registry**  
+>   เอา image ที่ build แล้วไปเก็บใน Docker Registry เช่น Docker Hub หรือ private registry เพื่อให้ Kubernetes ดึงไปใช้งานได้
+>
+>8. **Deploy ไป staging บน Kubernetes**  
+>   Deploy ไป environment ทดสอบก่อน production เพื่อดูว่าระบบทำงานจริงบน Kubernetes ได้ไหม
+>
+>9. **Smoke test หลัง deploy**  
+>   ทดสอบแบบเร็ว ๆ เช่น health check, login API, connect MySQL ได้ไหม เพื่อเช็กว่า container ไม่ได้แค่ start ได้ แต่ระบบใช้งานได้จริง
+>
+>10. **Manual approval ก่อน production**  
+>    ให้คนในทีม เช่น dev หรือ ops ตรวจและยืนยันก่อน deploy จริง เพื่อลดโอกาสที่ code ผิดจะหลุดขึ้น production
+>
+>11. **Deploy ไป production**  
+>    Jenkins สั่ง Kubernetes update deployment เช่นเปลี่ยน image version ใหม่ ระบบจะค่อย ๆ rollout โดยไม่ต้อง SSH เข้าเครื่องเอง
+>
+>12. **Monitoring ด้วย Prometheus + Grafana**  
+>    หลัง deploy ต้องดู metric เช่น CPU, memory, error rate และ response time ถ้ามีปัญหาจะได้รู้เร็วและ rollback ได้
+>
+>**เหตุผลที่ต้องเรียงลำดับแบบนี้:**  
+>เพราะต้องตรวจ code ก่อน build, ต้อง build ก่อน deploy และต้องทดสอบบน staging ก่อนขึ้น production เพื่อให้ลดความเสี่ยงกับระบบจริง
 
 ### ข้อ 1.3 (7 คะแนน)
 
