@@ -74,7 +74,7 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
             Jenkins สั่ง Kubernetes update deployment เช่นเปลี่ยน image version ใหม่ ระบบจะค่อย ๆ rollout โดยไม่ต้อง SSH เข้าเครื่องเอง
            **12.Monitoring ด้วย Prometheus + Grafana**
             หลัง deploy ต้องดู metric เช่น CPU, memory, error rate, response time ถ้ามีปัญหาจะได้รู้เร็วและ rollback ได้
->           ที่ต้องเรียงแบบนี้ เพราะเราต้องตรวจ code ก่อน build, ต้อง build ก่อน deploy และต้องทดสอบ staging ก่อน production เพื่อลดความเสี่ยงของระบบจริง
+           ที่ต้องเรียงแบบนี้ เพราะเราต้องตรวจ code ก่อน build, ต้อง build ก่อน deploy และต้องทดสอบ staging ก่อน production เพื่อลดความเสี่ยงของระบบจริง
 
 ### ข้อ 1.3 (7 คะแนน)
 
