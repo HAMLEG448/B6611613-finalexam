@@ -94,8 +94,12 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
 
 การเปลี่ยนจาก deploy แบบ manual (SSH + git pull) มาเป็น CI/CD อัตโนมัติด้วย Jenkins **แก้ปัญหาอะไรได้บ้าง** และ **webhook** มีบทบาทอย่างไรในกระบวนการนี้?
 
-> **ตอบ:** _[เขียนที่นี่]_
-
+> **ตอบ:** 
+>1. ลด human error เพราะเดิมต้องให้คนจำคำสั่งเอง เช่น SSH เข้าเครื่อง, git pull, restart service ถ้าลืม restart หรือดึงผิด branch ระบบก็พังได้ แต่ Jenkins จะทำตามขั้นตอนเดิมทุกครั้ง
+>2. ลด downtime เดิม restart ระบบทีใช้เวลา 15–20 นาที และต้องทำมือเอง แต่ถ้าใช้ **Kubernetes** ร่วมกับ **Jenkins** สามารถ deploy แบบ rolling update ได้
+>3. ตรวจเจอ error ก่อนขึ้น production เพราะ **Jenkins** สามารถรัน test, build Docker image และ deploy staging ก่อน ถ้า test ไม่ผ่าน pipeline จะหยุดทันที
+>4. rollback ง่ายกว่าเดิม เพราะแต่ละรอบ deploy จะมี Docker image tag ชัดเจน เช่น commit hash ถ้า version ใหม่มีปัญหาก็ย้อนกลับไป image เก่าได้ ไม่ต้องเดาว่า server ตอนนั้นใช้ code ชุดไหน
+>ส่วน **webhook** มีหน้าที่เป็นตัวแจ้ง **Jenkins** ว่ามีการเปลี่ยนแปลงใน Git แล้ว เช่น dev push code หรือ merge เข้า main จากนั้น Jenkins จะเริ่ม pipeline อัตโนมัติทันที
 ---
 
 ## ส่วนที่ 2: Docker & Containerization (20 คะแนน)
