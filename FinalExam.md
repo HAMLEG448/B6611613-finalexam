@@ -49,7 +49,7 @@
 
 CI/CD pipeline ของระบบนี้ควรมี stage อะไรบ้างเรียงตามลำดับ (ตั้งแต่ developer push code จนถึง deploy)? อธิบายว่า **แต่ละ stage ทำอะไร** และ **ทำไมต้องเรียงลำดับนี้**
 
-**ตอบ:**
+>**ตอบ:**
 
 1. **Developer push code หรือ Pull Request**  
    จุดเริ่มต้นคือ dev แก้ code แล้ว push ขึ้น Git เพื่อให้ระบบ CI/CD เริ่มทำงานอัตโนมัติ
