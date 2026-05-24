@@ -127,7 +127,20 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
 
 Docker image ประกอบด้วย layer หลายชั้น การเรียงคำสั่งใน Dockerfile มีผลต่อ **ความเร็วในการ build** และ **ขนาด image** อย่างไร? ยกตัวอย่างการเรียงที่ดี 1 ตัวอย่าง
 
-> **ตอบ:** _[เขียนที่นี่]_
+> **ตอบ:** **Dockerfile** ถ้าเรียงคำสั่งดี Docker จะใช้ cache ได้ ทำให้ build เร็วขึ้น และลดขนาด image ได้
+>
+> ตัวอย่างที่ดี
+>
+> FROM python:3.11-slim
+>
+> WORKDIR /app
+>
+> COPY requirements.txt .
+> RUN pip install --no-cache-dir -r requirements.txt
+>
+> COPY . .
+>
+> CMD ["python", "app.py"]
 
 ---
 
@@ -137,7 +150,7 @@ Docker image ประกอบด้วย layer หลายชั้น ก�
 
 **Terraform** กับ **Ansible** ต่างกันอย่างไร? (ตอบในแง่ declarative vs imperative และ provisioning vs configuration management)
 
-> **ตอบ:** _[เขียนที่นี่]_
+> **ตอบ:** _[ต่างกันหลัก ๆ คือ หน้าที่และวิธีการทำงาน **Terraform** ใช้สำหรับ provisioning คือสร้างหรือจัดการ infrastructure   **Ansible** ใช้สำหรับ configuration management คือเข้าไปตั้งค่าเครื่องที่มีอยู่แล้ว]_
 
 ### ข้อ 3.2 (6 คะแนน) — *อ้างอิงสถานการณ์*
 
