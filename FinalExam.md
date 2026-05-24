@@ -120,6 +120,7 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
 >ควรใช้ tag เช่น
 
 >>myapp:v1.0.1
+
 >>myapp:commit-a1b2c3d
 
 ### ข้อ 2.3 (6 คะแนน)
