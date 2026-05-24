@@ -99,7 +99,7 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
 >2. ลด downtime เดิม restart ระบบทีใช้เวลา 15–20 นาที และต้องทำมือเอง แต่ถ้าใช้ **Kubernetes** ร่วมกับ **Jenkins** สามารถ deploy แบบ rolling update ได้
 >3. ตรวจเจอ error ก่อนขึ้น production เพราะ **Jenkins** สามารถรัน test, build Docker image และ deploy staging ก่อน ถ้า test ไม่ผ่าน pipeline จะหยุดทันที
 >4. rollback ง่ายกว่าเดิม เพราะแต่ละรอบ deploy จะมี Docker image tag ชัดเจน เช่น commit hash ถ้า version ใหม่มีปัญหาก็ย้อนกลับไป image เก่าได้ ไม่ต้องเดาว่า server ตอนนั้นใช้ code ชุดไหน
-
+>
 >ส่วน **webhook** มีหน้าที่เป็นตัวแจ้ง **Jenkins** ว่ามีการเปลี่ยนแปลงใน Git แล้ว เช่น dev push code หรือ merge เข้า main จากนั้น Jenkins จะเริ่ม pipeline อัตโนมัติทันที
 ---
 
@@ -109,13 +109,18 @@ CI/CD pipeline ของระบบนี้ควรมี stage อะไร�
 
 อธิบายว่า **container ต่างจาก virtual machine (VM) อย่างไร** และการ containerize แอป Flask + MySQL ช่วยแก้ปัญหา "บนเครื่องผมรันได้แต่บน server รันไม่ได้" ได้อย่างไร
 
-> **ตอบ:** _[เขียนที่นี่]_
-
+> **ตอบ:** VM จะจำลองเครื่องทั้งเครื่องขึ้นมาใหม่ มี OS ของตัวเอง แต่ container ใช้ kernel ร่วมกับ host แล้วแพ็กเฉพาะแอปกับ dependency ที่จำเป็น
+>
+>สำหรับ Flask + MySQL การใช้ Docker ช่วยให้ environment เหมือนกันทุกที่
 ### ข้อ 2.2 (7 คะแนน)
 
 ทำไมในระบบ production **ไม่ควรใช้ Docker image tag `latest`**? ถ้าไม่ใช้ `latest` ควรใช้รูปแบบ tag แบบไหนแทน และมีผลต่อการ rollback อย่างไร?
 
-> **ตอบ:** _[เขียนที่นี่]_
+> **ตอบ:** ไม่ควรใช้ tag latest เพราะไม่รู้แน่ชัดว่าเป็น image version ไหน ถ้ามีคน push image ใหม่ทับ latest ระบบอาจ deploy code คนละชุดกับที่คิดไว้ และ rollback ยาก
+>ควรใช้ tag เช่น
+
+>>myapp:v1.0.1
+>>myapp:commit-a1b2c3d
 
 ### ข้อ 2.3 (6 คะแนน)
 
